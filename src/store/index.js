@@ -1,4 +1,5 @@
 import { createStore, combineReducers, compose, applyMiddleware } from "redux";
+import ReduxThunk from "redux-thunk";
 import filters from "../reducers/filters";
 import heroes from "../reducers/heroes";
 
@@ -29,13 +30,16 @@ const stringMiddleware = (store) => (dispatch) => (action) => {
 //     return store;
 //   };
 
-const composeEnhancers =
-	window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// const composeEnhancers =
+// 	window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const middleware = applyMiddleware(stringMiddleware);
+// const middleware = applyMiddleware(ReduxThunk, stringMiddleware);
 
 const store = createStore( 
                     combineReducers({heroes, filters}),
-                    composeEnhancers(middleware));
+                    compose(
+                      applyMiddleware(ReduxThunk, stringMiddleware),
+                      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+                    ));
 
 export default store;
